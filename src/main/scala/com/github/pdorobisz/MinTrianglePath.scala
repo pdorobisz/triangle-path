@@ -3,7 +3,7 @@ package com.github.pdorobisz
 import com.github.pdorobisz.reader.DefaultInputReader
 import com.github.pdorobisz.service.DefaultPathFinder
 
-object Main extends App {
+object MinTrianglePath extends App {
 
   private val inputReader = new DefaultInputReader(Console.in)
   private val resultOrError = inputReader.parseInput().map(DefaultPathFinder.minPath)
