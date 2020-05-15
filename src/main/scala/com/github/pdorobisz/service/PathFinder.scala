@@ -10,12 +10,12 @@ trait PathFinder {
    * @param leafNodes list of triangle's leaf nodes
    * @return list of node values (from root to leaf) in the best path
    */
-  def minPath(leafNodes: List[Triangle]): List[Int]
+  def minPath(leafNodes: Seq[Triangle]): Seq[Int]
 }
 
 object DefaultPathFinder extends PathFinder {
 
-  override def minPath(leafNodes: List[Triangle]): List[Int] = {
+  override def minPath(leafNodes: Seq[Triangle]): Seq[Int] = {
 
     def bestMinPath(row: List[Triangle], bestChildPaths: List[(Int, List[Int])]): List[(Int, List[Int])] =
       if (bestChildPaths.isEmpty)
@@ -45,7 +45,7 @@ object DefaultPathFinder extends PathFinder {
         findMinPath(parentRow, bestPaths)
     }
 
-    findMinPath(leafNodes, Nil)
+    findMinPath(leafNodes.toList, Nil)
   }
 
 }
