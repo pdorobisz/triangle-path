@@ -13,7 +13,8 @@ class DefaultInputReaderTest extends FunSpec with Matchers {
         """7
           |6 3
           |3 8 5""".stripMargin
-      val reader = new DefaultInputReader(new BufferedReader(new StringReader(input)))
+      val bufferedReader = new BufferedReader(new StringReader(input))
+      val reader = new DefaultInputReader(bufferedReader)
 
       val expectedRoot = RootNode(7)
       val expectedNode1 = RegularNode(6, None, Some(expectedRoot))

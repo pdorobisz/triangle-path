@@ -7,7 +7,7 @@ import com.github.pdorobisz.model.Triangle
 trait InputReader {
 
   /**
-   * Reads from standard input and parses data.
+   * Reads from input and parses data.
    *
    * @return parsed triangle (list of leaf nodes) or error
    */
@@ -17,7 +17,7 @@ trait InputReader {
 
 class DefaultInputReader(in: BufferedReader) extends InputReader {
 
-  override def parseInput(): Either[String, Seq[Triangle]] = {
+  override def parseInput(): Either[String, Seq[Triangle]] =
     Iterator
       .continually(in.readLine())
       .takeWhile(!Option(_).forall(_.trim.isEmpty))
@@ -25,5 +25,4 @@ class DefaultInputReader(in: BufferedReader) extends InputReader {
         case (Right(previousRow), line) => LineParser.parse(line, previousRow)
         case (left@Left(_), _) => left
       }
-  }
 }

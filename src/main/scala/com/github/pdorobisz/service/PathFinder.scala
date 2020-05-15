@@ -5,7 +5,7 @@ import com.github.pdorobisz.model.{RegularNode, RootNode, Triangle}
 trait PathFinder {
 
   /**
-   * Finds minimal path from root to leaf node
+   * Finds minimal path from root to leaf node.
    *
    * @param leafNodes list of triangle's leaf nodes
    * @return list of node values (from root to leaf) in the best path

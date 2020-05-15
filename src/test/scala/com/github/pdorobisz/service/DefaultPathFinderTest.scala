@@ -7,17 +7,18 @@ class DefaultPathFinderTest extends FunSpec with Matchers {
 
   describe("Default path finder") {
     describe("when finding min path") {
+
       it("should correctly handle empty list") {
         DefaultPathFinder.minPath(Nil) shouldBe empty
       }
 
-      it("should return correct result for a triangle with single node") {
+      it("should return correct result for a triangle with a single node") {
         val input = RootNode(123)
         val result = DefaultPathFinder.minPath(Seq(input))
         result shouldBe Seq(input.value)
       }
 
-      it("should return correct result for a triangle with 2 level") {
+      it("should return correct result for a triangle with 2 levels") {
         val root = RootNode(1)
         val leaf1 = RegularNode(3, None, Some(root))
         val leaf2 = RegularNode(2, Some(root), None)

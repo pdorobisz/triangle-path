@@ -4,10 +4,11 @@ import com.github.pdorobisz.reader.DefaultInputReader
 import com.github.pdorobisz.service.DefaultPathFinder
 
 object Main extends App {
-  val eitherPathOrError = new DefaultInputReader(Console.in).parseInput()
-    .map(DefaultPathFinder.minPath)
 
-  eitherPathOrError match {
+  private val inputReader = new DefaultInputReader(Console.in)
+  private val resultOrError = inputReader.parseInput().map(DefaultPathFinder.minPath)
+
+  resultOrError match {
     case Left(error) =>
       println(error)
       System.exit(1)

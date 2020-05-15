@@ -5,7 +5,7 @@ import com.github.pdorobisz.model.{RegularNode, RootNode, Triangle}
 
 import scala.collection.mutable.ListBuffer
 
-object LineParser {
+private[reader] object LineParser {
 
   def parse(line: String, previousRow: Seq[Triangle]): Either[String, Seq[Triangle]] = {
     def parseValue(s: String): Either[String, Int] = s.toIntOption match {
