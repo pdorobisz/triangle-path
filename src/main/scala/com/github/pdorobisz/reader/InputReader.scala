@@ -1,8 +1,8 @@
 package com.github.pdorobisz.reader
 
-import com.github.pdorobisz.model.Triangle
+import java.io.BufferedReader
 
-import scala.io.StdIn
+import com.github.pdorobisz.model.Triangle
 
 trait InputReader {
 
@@ -15,14 +15,15 @@ trait InputReader {
   def parseInput(): Either[String, Seq[Triangle]]
 }
 
-object DefaultInputReader extends InputReader {
+class DefaultInputReader(in: BufferedReader) extends InputReader {
 
   override def parseInput(): Either[String, Seq[Triangle]] = {
     Iterator
-      .continually(StdIn.readLine())
+      .continually(in.readLine())
       .takeWhile(!Option(_).forall(_.trim.isEmpty))
-      .foreach(println)
-
-    Right(Nil)
+      .foldLeft(Right(List.empty[Triangle]): Either[String, Seq[Triangle]]) {
+        case (Right(previousRow), line) => LineParser.parse(line, previousRow)
+        case (left@Left(_), _) => left
+      }
   }
 }
