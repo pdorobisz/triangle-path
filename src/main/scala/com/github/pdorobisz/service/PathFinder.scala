@@ -32,6 +32,7 @@ object DefaultPathFinder extends PathFinder {
 
     @scala.annotation.tailrec
     def findMinPath(currentRow: List[Triangle], bestChildPaths: List[(Int, List[Int])]): List[Int] = currentRow match {
+      case Nil => Nil
       case RootNode(rootValue) :: Nil =>
         val bestChildPath = bestChildPaths
           .minByOption(_._1)
