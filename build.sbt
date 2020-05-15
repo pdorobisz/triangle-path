@@ -1,4 +1,4 @@
-name := "Triangle Path"
+name := "triangle-path"
 
 version := "1.0"
 
