@@ -3,37 +3,46 @@ package com.github.pdorobisz.service
 import com.github.pdorobisz.model.{RegularNode, RootNode, Triangle}
 
 trait PathFinder {
-  def minPath(leafLayer: List[Triangle]): List[Int]
+
+  /**
+   * Finds minimal path from root to leaf node
+   *
+   * @param leafNodes list of triangle's leaf nodes
+   * @return list of node values (from root to leaf) in the best path
+   */
+  def minPath(leafNodes: List[Triangle]): List[Int]
 }
 
 object DefaultPathFinder extends PathFinder {
-  override def minPath(leafLayer: List[Triangle]): List[Int] = {
+
+  override def minPath(leafNodes: List[Triangle]): List[Int] = {
+
     @scala.annotation.tailrec
-    def findMinPath(currentLayer: List[Triangle], bestSubtriangles: List[(Int, List[Int])]): List[Int] =
-      currentLayer match {
-        case (r: RootNode) :: Nil =>
-          if (bestSubtriangles.isEmpty) List(r.value)
-          else {
-            val bestChild = bestSubtriangles.minBy(_._1)
-            r.value :: bestChild._2
+    def findMinPath(currentRow: List[Triangle], bestChildPaths: List[(Int, List[Int])]): List[Int] = currentRow match {
+      case RootNode(rootValue) :: Nil =>
+        val bestChildPath = bestChildPaths
+          .minByOption(_._1)
+          .toList
+          .flatMap(_._2)
+        rootValue :: bestChildPath
+      case regularNodesRow: List[RegularNode] if bestChildPaths.isEmpty =>
+        val bestPaths = regularNodesRow.map(n => (n.value, List(n.value)))
+        val parentRow = regularNodesRow.flatMap(_.rightParent)
+        findMinPath(parentRow, bestPaths)
+      case regularNodesRow: List[RegularNode] =>
+        val bestPaths = bestChildPaths
+          .sliding(2)
+          .zip(regularNodesRow)
+          .toList
+          .map { case (children, node) =>
+            val (bestChildValue, bestChildPath) = children.minBy(_._1)
+            (node.value + bestChildValue, node.value :: bestChildPath)
           }
-        case childrenLayer: List[RegularNode] =>
-          val bestPath: List[(Int, List[Int])] = bestSubtriangles.sliding(2).zip(childrenLayer).map { case (children, n) =>
-            val bestChild = children.minBy(_._1)
-            (n.value + bestChild._1, n.value :: bestChild._2)
-          }.toList
-          val parentLayer = childrenLayer.flatMap(_.rightParent)
-          findMinPath(parentLayer, bestPath)
-      }
-
-    leafLayer match {
-      case (r: RootNode) :: Nil => List(r.value)
-      case list: List[RegularNode] =>
-        val values = list.map(n => (n.value, List(n.value)))
-        val parentLayer = list.flatMap(_.rightParent)
-
-        findMinPath(parentLayer, values)
+        val parentRow = regularNodesRow.flatMap(_.rightParent)
+        findMinPath(parentRow, bestPaths)
     }
+
+    findMinPath(leafNodes, Nil)
   }
 
 }
