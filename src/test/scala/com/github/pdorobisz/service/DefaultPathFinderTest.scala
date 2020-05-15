@@ -10,7 +10,7 @@ class DefaultPathFinderTest extends FunSpec with Matchers {
       it("should return correct result for a triangle with one node only") {
         val input = TriangleLeaf(123)
         val result = DefaultPathFinder.minPath(input)
-        result shouldBe Seq(input)
+        result shouldBe Seq(input.value)
       }
     }
   }
