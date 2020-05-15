@@ -1,9 +1,9 @@
 package com.github.pdorobisz.reader
 
 import com.github.pdorobisz.model.{RegularNode, RootNode}
-import org.scalatest.{FunSpec, Inside, Matchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class LineParserTest extends FunSpec with Inside with Matchers {
+class LineParserTest extends FunSpec with Matchers {
 
   describe("Line parser") {
 
@@ -42,9 +42,7 @@ class LineParserTest extends FunSpec with Inside with Matchers {
       val expected3 = RegularNode(5, Some(node2), None)
 
       val result = LineParser.parse("3 8 5", previousRow)
-      inside(result) { case Right(parsedRow) =>
-        parsedRow shouldBe Seq(expected1, expected2, expected3)
-      }
+      result shouldBe Right(Seq(expected1, expected2, expected3))
     }
 
     it("should return an error when unable to parse non-first row") {
