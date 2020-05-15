@@ -17,6 +17,19 @@ object DefaultPathFinder extends PathFinder {
 
   override def minPath(leafNodes: List[Triangle]): List[Int] = {
 
+    def bestMinPath(row: List[Triangle], bestChildPaths: List[(Int, List[Int])]): List[(Int, List[Int])] =
+      if (bestChildPaths.isEmpty)
+        row.collect { case n: RegularNode => (n.value, List(n.value)) }
+      else
+        bestChildPaths
+          .sliding(2)
+          .zip(row)
+          .toList
+          .collect { case (children, n: RegularNode) =>
+            val (bestChildValue, bestChildPath) = children.minBy(_._1)
+            (n.value + bestChildValue, n.value :: bestChildPath)
+          }
+
     @scala.annotation.tailrec
     def findMinPath(currentRow: List[Triangle], bestChildPaths: List[(Int, List[Int])]): List[Int] = currentRow match {
       case RootNode(rootValue) :: Nil =>
@@ -25,20 +38,9 @@ object DefaultPathFinder extends PathFinder {
           .toList
           .flatMap(_._2)
         rootValue :: bestChildPath
-      case regularNodesRow: List[RegularNode] if bestChildPaths.isEmpty =>
-        val bestPaths = regularNodesRow.map(n => (n.value, List(n.value)))
-        val parentRow = regularNodesRow.flatMap(_.rightParent)
-        findMinPath(parentRow, bestPaths)
-      case regularNodesRow: List[RegularNode] =>
-        val bestPaths = bestChildPaths
-          .sliding(2)
-          .zip(regularNodesRow)
-          .toList
-          .map { case (children, node) =>
-            val (bestChildValue, bestChildPath) = children.minBy(_._1)
-            (node.value + bestChildValue, node.value :: bestChildPath)
-          }
-        val parentRow = regularNodesRow.flatMap(_.rightParent)
+      case _ =>
+        val bestPaths = bestMinPath(currentRow, bestChildPaths)
+        val parentRow = currentRow.collect { case n: RegularNode => n.rightParent.toList }.flatten
         findMinPath(parentRow, bestPaths)
     }
 
